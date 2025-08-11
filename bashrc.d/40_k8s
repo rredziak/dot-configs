@@ -21,11 +21,31 @@ if [ -x /usr/bin/kubectl -o -v KUBECTL ]; then
     alias kctx=/usr/bin/kubectx
   else
     kctx() {
-      if [ $# -gt 0 ]; then
+      if [[ $# -gt 0 ]]; then
         kubectl config use-context $@
       else
-        kubectl config get-contexts
+        kubectl config current-context 2>/dev/null
+        local _cur_ctx_ec=$?
+        local _all_ctx=$(kubectl config get-contexts -o name | tr '\n' ' ')
+        if [[ $_cur_ctx_ec -ne 0 ]]; then
+          echo "$_all_ctx"
+        else
+          local _cur_ctx=$(kubectl config current-context)
+          echo "$_all_ctx" | grep -w $_cur_ctx
+        fi
       fi
     }
+
+    _kctx_get_contexts() {
+      local cur prev words cword
+      _init_completion || return
+
+      local _contexts=$(kubectl config get-contexts -o name)
+      COMPREPLY=($(compgen -W "$_contexts" "$cur"))
+
+      return 0
+    }
+
+    complete -F _kctx_get_contexts kctx
   fi
 fi
