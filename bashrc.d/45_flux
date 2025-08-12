@@ -1,5 +1,0 @@
-FLUX=$(which flux)
-
-if [[ $? == 0 ]]; then
- source <($FLUX completion bash)
-fi

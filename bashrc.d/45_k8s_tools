@@ -1,0 +1,15 @@
+k8s_tools=(helm flux)
+
+for t in ${k8s_tools[@]}; do
+  which ${t} 1>/dev/null 2>/dev/null
+
+  if [[ $? == 0 ]]; then
+    source <(${t} completion bash)
+  fi
+
+  if [[ ${t} == 'helm' ]]; then
+    alias h=/usr/bin/helm
+    complete -o default -F __start_helm h
+  fi
+done
+
