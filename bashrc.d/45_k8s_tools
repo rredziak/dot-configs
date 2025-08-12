@@ -1,6 +1,6 @@
 k8s_tools=(helm flux)
 
-for t in ${k9s_tools[@]}; do
+for t in ${k8s_tools[@]}; do
   which ${t} 1>/dev/null 2>/dev/null
 
   if [[ $? == 0 ]]; then
