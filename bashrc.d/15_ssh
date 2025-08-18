@@ -23,7 +23,7 @@ if [[ ! -v SSH_AUTH_SOCK ]]; then
 else
  cat > ~/.ssh/forwarded_agent.sh <<EOF
 export SSH_AUTH_SOCK=${SSH_AUTH_SOCK}
-echo "Agent forwarding in effec, socket: ${SSH_AUTH_SOCK}"
+echo "Agent forwarding in effect, socket: ${SSH_AUTH_SOCK}"
 EOF
 
 fi
