@@ -17,8 +17,15 @@ check_ssh_agent() {
 
 [[ -d ~/.ssh ]] || mkdir -pm 0700 ~/.ssh
 
-[[ -f ~/.ssh/agent.sh ]] && source ~/.ssh/agent.sh
+if [[ ! -v SSH_AUTH_SOCK ]]; then
+  [[ -f ~/.ssh/agent.sh ]] && source ~/.ssh/agent.sh
+  check_ssh_agent
+else
+ cat > ~/.ssh/forwarded_agent.sh <<EOF
+export SSH_AUTH_SOCK=${SSH_AUTH_SOCK}
+echo "Agent forwarding in effec, socket: ${SSH_AUTH_SOCK}"
+EOF
 
-check_ssh_agent
+fi
 
 unset -f check_ssh_agent
