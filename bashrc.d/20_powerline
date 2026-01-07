@@ -8,7 +8,6 @@ elif [ -x /usr/bin/minikube ] ; then
 fi
 
 function _update_ps1() {
-  local PWRLNOPTS='-hostname-only-if-ssh -theme solarized-dark16'
   PS1="$(/usr/bin/powerline-go -error $? -jobs $(jobs -p | wc -l) ${PWRLNOPTS})"
 
   # Uncomment the following line to automatically clear errors after showing
@@ -21,6 +20,9 @@ function _update_ps1() {
 
 pythonver="python$(python -c 'import sys; print(".".join(sys.version.split()[0].split(".")[0:2]))')"
 srcpline="${HOME}/.local/lib/${pythonver}/site-packages/powerline/bindings/bash/powerline.sh"
+
+
+PWRLNOPTS='-colorize-hostname -cwd-max-depth 3 -modules venv,user,host,ssh,git,jobs,exit,newline,perms,dotenv,cwd,root -static-prompt-indicator'
 
 if [ "$TERM" != "linux" ] && [ -f "/usr/bin/powerline-go" ]; then
   PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
