@@ -1,1 +1,2 @@
 *.sw*
+bashrc.d/99_local_env
