@@ -21,7 +21,7 @@ function _update_ps1() {
 pythonver="python$(python -c 'import sys; print(".".join(sys.version.split()[0].split(".")[0:2]))')"
 srcpline="${HOME}/.local/lib/${pythonver}/site-packages/powerline/bindings/bash/powerline.sh"
 
-PWRLNOPTS='-colorize-hostname -cwd-max-depth 3 -modules venv,user,host,ssh,git,jobs,exit,newline,perms,dotenv,cwd,root -static-prompt-indicator'
+PWRLNOPTS='-colorize-hostname -cwd-max-depth 3 -modules venv,user,host,ssh,git,jobs,exit,newline,perms,direnv,dotenv,cwd,root -static-prompt-indicator'
 
 if [ "$TERM" != "linux" ] && [ -f "/usr/bin/powerline-go" ]; then
   PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"

@@ -24,3 +24,7 @@ rpt() {
 if [ -x /usr/bin/dconf -a -n "${DISPLAY}" ]; then
   dconf write /org/gnome/desktop/input-sources/xkb-options "['caps:none']"
 fi
+
+if [[ -x /usr/bin/direnv ]] ; then
+  eval (direnv hook bash)
+fi
