@@ -26,5 +26,5 @@ if [ -x /usr/bin/dconf -a -n "${DISPLAY}" ]; then
 fi
 
 if [[ -x /usr/bin/direnv ]] ; then
-  eval (direnv hook bash)
+  eval "$(direnv hook bash)"
 fi
