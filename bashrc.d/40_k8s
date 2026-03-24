@@ -21,18 +21,36 @@ if [ -x /usr/bin/kubectl -o -v KUBECTL ]; then
     alias kctx=/usr/bin/kubectx
   else
     kctx() {
+      local _all_ctx=$(kubectl config get-contexts -o name | tr '\n' ' ')
+      local _last_ctx=$(kubectl config current-context 2>/dev/null)
+      local _swp_file="${HOME}/.kube/kctx_last_ctx"
+
       if [[ $# -gt 0 ]]; then
-        kubectl config use-context $@
-      else
-        kubectl config current-context 1>/dev/null 2>&1
-        local _cur_ctx_ec=$?
-        local _all_ctx=$(kubectl config get-contexts -o name | tr '\n' ' ')
-        if [[ $_cur_ctx_ec -ne 0 ]]; then
-          echo "$_all_ctx"
-        else
-          local _cur_ctx=$(kubectl config current-context)
-          echo "$_all_ctx" | grep -w $_cur_ctx
+        local _k_opts
+
+        case $1 in
+        -)
+          [[ -f $_swp_file ]] && _k_opts=$(<$_swp_file)
+          ;;
+
+        *)
+          _k_opts=$@
+          ;;
+        esac
+
+        if [[ -n $_k_opts ]]; then
+          kubectl config use-context $_k_opts
+
+          [[ -n $_last_ctx ]] && echo $_last_ctx > $_swp_file
         fi
+
+        return 0
+      fi
+
+      if [[ -z $_last_ctx ]]; then
+        echo "$_all_ctx"
+      else
+        echo "$_all_ctx" | grep -w $_last_ctx
       fi
     }
 

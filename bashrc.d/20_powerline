@@ -1,11 +1,19 @@
 # powerline
 
-# unset kubernetes contex to be 101% sure, that powerline won't block shell looking for nonexisting k8s cluster
-if [ -x /usr/bin/kubectl ] ; then
-  kubectl config unset current-context > /dev/null
-elif [ -x /usr/bin/minikube ] ; then
-  minikube kubectl -- config unset current-context > /dev/null
-fi
+
+clear_context() {
+  if [[ -v TMUX && ${K8S_SKIP_CC:-off} == "on" ]]; then
+    return 0
+  fi
+
+  # unset kubernetes contex to be 101% sure, that powerline won't block shell
+  # looking for nonexisting k8s cluster
+  if [ -x /usr/bin/kubectl ] ; then
+    kubectl config unset current-context > /dev/null
+  elif [ -x /usr/bin/minikube ] ; then
+    minikube kubectl -- config unset current-context > /dev/null
+  fi
+}
 
 function _update_ps1() {
   PS1="$(/usr/bin/powerline-go -error $? -jobs $(jobs -p | wc -l) ${PWRLNOPTS})"
@@ -23,6 +31,8 @@ srcpline="${HOME}/.local/lib/${pythonver}/site-packages/powerline/bindings/bash/
 
 
 PWRLNOPTS='-colorize-hostname -cwd-max-depth 3 -modules venv,user,host,ssh,git,jobs,exit,newline,perms,dotenv,cwd,root -static-prompt-indicator'
+
+clear_context
 
 if [ "$TERM" != "linux" ] && [ -f "/usr/bin/powerline-go" ]; then
   PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
